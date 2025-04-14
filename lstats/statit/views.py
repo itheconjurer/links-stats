@@ -68,7 +68,7 @@ class LinkStatParser(HTMLParser):
 async def get_link_stats(link: str) -> dict:
     res = {'link': link, 'stats': '{}'}
     print(f'{link}')
-    async with ClientSession() as session:
+    async with ClientSession(trust_env=True) as session:
         async with session.get(link) as response:
             print(f'{link}: {response.status}')
             res['status'] = response.status
