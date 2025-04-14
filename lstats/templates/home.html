@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Links Statistics</title>
+</head>
+<body>
+{% if links_list %}
+<table>
+  <tr>
+    <td>Link</td>
+    <td>Status</td>
+    <td>Content Type</td>
+    <td>Statistics</td>
+  </tr>
+  {% for l in links_list %}
+  <tr>
+    <td>{{l.link_}}</td>
+    <td>{{l.status_}}</td>
+    <td>{{l.content_type_}}</td>
+    <td>{{l.stats}}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+<form name="New-Link-Form" method="post" id="New-Link-Form">
+    {% csrf_token %}
+    <p>Enter Another Link</p>
+    <input type="text" id="link" name="link" value="" />
+    <button type="submit" name="Submit" >Submit</button>
+</form>
+</body>
+</html>
