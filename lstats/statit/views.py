@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 from collections import defaultdict
 from hashlib import sha256
 from html.parser import HTMLParser
@@ -67,7 +68,6 @@ class LinkStatParser(HTMLParser):
 
 async def get_link_stats(link: str) -> dict:
     res = {'link': link, 'stats': '{}'}
-    print(f'{link}')
     async with ClientSession(trust_env=True) as session:
         async with session.get(link) as response:
             print(f'{link}: {response.status}')
@@ -97,11 +97,18 @@ class LinksView(AsyncLoginRequiredMixin, AsyncUserPassesTestMixin, View):
 
         links_list = []
         tasks = [get_link_stats(l.link) async for l in links]
+        t1 = time.time()
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        tt = int(time.time() - t1)
 
-        results = await asyncio.gather(*tasks)
-
-        for l in results:
+        for i, l in enumerate(results):
         # for l in links:
+            if isinstance(l, Exception):
+                l_dict = {'stats': '{}', 'link_': links[i].link,
+                          'status_': repr(l),
+                          'content_type_': 'NA'}
+                links_list.append(l_dict)
+                continue
             l_stats = json.loads(l['stats'] if l['stats'] else '{}')
             l_dict  = {'link_': l['link'], 'status_': l['status'],
                        'content_type_': l['content_type'], 'stats': l_stats}
@@ -110,7 +117,8 @@ class LinksView(AsyncLoginRequiredMixin, AsyncUserPassesTestMixin, View):
 
         return await sync_to_async(render)(request,
                                            'home.html',
-                                           {'links_list': links_list})
+                                           {'links_list': links_list,
+                                           'time_taken': tt})
 
     async def post(self, request: HttpRequest) -> HttpResponse:
         user = await request.auser()

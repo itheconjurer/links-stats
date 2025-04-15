@@ -18,5 +18,6 @@ This project demonstrates the following:
 - Async HTTP Client using AIOHTTP
 - Simple UI using pure HTML Forms 
 
-To experience, visit 
-Clone the repo, create 
+To experience, visit https://conjurer.pythonanywhere.com
+
+For login details, contact me. 

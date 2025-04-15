@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Links Statistics</title>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+</style>
 </head>
 <body>
 {% if links_list %}
@@ -22,6 +29,9 @@
   </tr>
   {% endfor %}
 </table>
+{% endif %}
+{% if links_list %}
+<p><b> Downloaded {{links_list|length}} links in {{time_taken}} seconds</b></p>
 {% endif %}
 <form name="New-Link-Form" method="post" id="New-Link-Form">
     {% csrf_token %}
